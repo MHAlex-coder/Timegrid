@@ -1,12 +1,12 @@
-const CACHE_NAME = 'timeweaver-v19';
+const CACHE_NAME = 'timeweaver-v20';
 const urlsToCache = [
-  './Index.html',
-  './Style.css',
+  './index.html',
+  './style.css',
   './config.js',
   './license.js',
   './calendar.js',
   './storage.js',
-  './Script.js',
+  './script.js',
   './interruptions.js',
   './interruptions.css',
   './language.js'
