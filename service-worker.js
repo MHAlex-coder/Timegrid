@@ -1,4 +1,4 @@
-const CACHE_NAME = 'timeweaver-v20';
+const CACHE_NAME = 'timegrid-v22';
 const urlsToCache = [
   './index.html',
   './style.css',

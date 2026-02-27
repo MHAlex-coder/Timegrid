@@ -1,8 +1,8 @@
-# TimeWeaver - Licensieringssystem
+# TimeGrid - Licensieringssystem
 
 ## Översikt
 
-TimeWeaver använder ett klient-baserat licensieringssystem med tre licenstyper:
+TimeGrid använder ett klient-baserat licensieringssystem med tre licenstyper:
 
 ### Licenstyper
 
@@ -35,7 +35,7 @@ TimeWeaver använder ett klient-baserat licensieringssystem med tre licenstyper:
 
 ### Aktivera licens:
 
-1. Öppna TimeWeaver
+1. Öppna TimeGrid
 2. Klicka på **☰ Meny** → **🔑 Licens**
 3. Klistra in din licensnyckel
 4. Klicka på **Aktivera Licens**
@@ -84,9 +84,10 @@ Krypterat med XOR och Base64-kodat.
 
 ### Lagring:
 
-- Licensdata sparas i `localStorage` (nyckel: `timeweaver_license`)
+- Licensdata sparas i `localStorage` (nyckel: `timegrid_license`)
 - Testperiod startar automatiskt vid första användningen
-- Spåras med `timeweaver_first_run` nyckel
+- Spåras med `timegrid_first_run` nyckel
+- Bakåtkompatibilitet: äldre `timeweaver_license` och `timeweaver_first_run` migreras automatiskt
 
 ## Frågor & Svar
 

@@ -1,4 +1,4 @@
-# TimeWeaver - Projektstruktur
+# TimeGrid - Projektstruktur
 
 ## 📁 FILÖVERSIKT
 

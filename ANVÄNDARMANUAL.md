@@ -1,4 +1,4 @@
-# 📘 TimeWeaver - Användarmanual
+# 📘 TimeGrid - Användarmanual
 
 **Kapacitetsplaneringsverktyg för projekthantering**
 
@@ -26,7 +26,7 @@ Version 2.0 | December 2025
 
 ## Introduktion
 
-TimeWeaver är ett kraftfullt verktyg för kapacitetsplanering som hjälper dig att:
+TimeGrid är ett kraftfullt verktyg för kapacitetsplanering som hjälper dig att:
 
 - 📊 Planera och visualisera projektuppgifter över tid
 - ⏱️ Hantera arbetskapacitet per dag och vecka
@@ -70,7 +70,7 @@ När du öppnar verktyget första gången ser du:
 
 ### Mobil användning
 
-TimeWeaver är fullständigt responsiv och fungerar utmärkt på smartphones och surfplattor:
+TimeGrid är fullständigt responsiv och fungerar utmärkt på smartphones och surfplattor:
 
 - Optimerad layout för små skärmar
 - Touch-vänlig interface
@@ -137,7 +137,7 @@ Varje dag har ett **max-timmar fält** (standard 7h):
 
 ### Uppgiftstyper
 
-TimeWeaver har stöd för anpassningsbara uppgiftstyper. Standard-typer inkluderar:
+TimeGrid har stöd för anpassningsbara uppgiftstyper. Standard-typer inkluderar:
 
 | Typ | Färg | Användning |
 |-----|------|------------|
@@ -200,7 +200,7 @@ Du kan lägga till kommentarer på valfritt block i tidslinjen för att dokument
 
 ## Inställningar och anpassning
 
-TimeWeaver låter dig anpassa verktyget efter dina behov via inställningsmenyn.
+TimeGrid låter dig anpassa verktyget efter dina behov via inställningsmenyn.
 
 ### Öppna inställningar
 
@@ -371,7 +371,7 @@ Avbrottsloggen hjälper dig att spåra och analysera avbrott i arbetet.
 
 1. Scrolla till **"Avbrottslogg"** längst ner på sidan
 2. Hitta rätt datum i tidslinjen
-3. Klicka på **"+ Lägg till"**
+3. Klicka på **"Lägg till avbrott"**
 4. Fyll i avbrottsinformation:
    - **Tid (h):** Hur lång tid tog avbrottet? (0.25 = 15 min, 0.5 = 30 min, osv.)
    - **Avdelning:** Välj vilken avdelning avbrottet kom från (PI/Mail/Annat)
@@ -400,7 +400,7 @@ Kvalitetsförlustloggen hjälper dig att spåra och analysera kvalitetsförluste
 
 1. Scrolla till **"Kvalitetsförluster"** längst ner på sidan
 2. Hitta rätt datum i tidslinjen
-3. Klicka på **"+ Lägg till"**
+3. Klicka på **"Lägg till slöseri"**
 4. Fyll i kvalitetsförlustinformation:
    - **Tid (h):** Hur lång tid tog kvalitetsförlusten? (0.25 = 15 min, 0.5 = 30 min, osv.)
    - **Avdelning:** Välj vilken avdelning som är ansvarig/berörd
@@ -424,7 +424,7 @@ Kvalitetsförlustloggen hjälper dig att spåra och analysera kvalitetsförluste
 
 ## Rapporter
 
-TimeWeaver genererar två typer av rapporter:
+TimeGrid genererar två typer av rapporter:
 
 ### Beläggningsrapport
 
@@ -679,7 +679,7 @@ Alla ändringar kan ångras!
 
 ### Språkstöd
 
-TimeWeaver stödjer svenska och engelska:
+TimeGrid stödjer svenska och engelska:
 
 1. Klicka på **🇸🇪 Svenska** eller **🇬🇧 English** längst upp
 2. Språket byts direkt i hela gränssnittet
@@ -1039,7 +1039,7 @@ Varje uppgift kan ha följande egenskaper:
 #### Logga avbrott
 1. Scrolla till avbrottsloggen
 2. Hitta rätt datum
-3. Klicka "+ Lägg till"
+3. Klicka "Lägg till avbrott"
 4. Fyll i tid, avdelning (från era anpassade), kontakt och beskrivning
 
 #### Generera veckorapport

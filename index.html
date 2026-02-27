@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TimeWeaver - Capacity Planning Tool</title>
+<title>TimeGrid - Capacity Planning Tool</title>
 <link rel="stylesheet" href="style.css">
 
 <!-- PWA Manifest - läggs till dynamiskt via JS för att undvika CORS-fel vid file:// -->
@@ -19,7 +19,7 @@ if (location.protocol !== 'file:') {
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="TimeWeaver">
+<meta name="apple-mobile-web-app-title" content="TimeGrid">
 
 <style>
 /* Modern header styling */
@@ -948,7 +948,7 @@ body {
         
         <h3>Aktivera ny licens</h3>
         <p style="font-size: 0.9em; color: #666; margin-bottom: 10px;">
-            Ange din licensnyckel nedan för att aktivera TimeWeaver.
+            Ange din licensnyckel nedan för att aktivera TimeGrid.
         </p>
         
         <div style="margin-bottom: 15px;">
@@ -1157,7 +1157,7 @@ function updateLicenseStatusDisplay() {
         display.style.color = '#721c24';
         display.innerHTML = `
             <p style="margin: 0; font-weight: 600;">❌ Ingen giltig licens</p>
-            <p style="margin: 5px 0 0 0; font-size: 0.95em;">${status.error || 'Aktivera en licens för att använda TimeWeaver'}</p>
+            <p style="margin: 5px 0 0 0; font-size: 0.95em;">${status.error || 'Aktivera en licens för att använda TimeGrid'}</p>
         `;
     }
 }
@@ -1188,7 +1188,7 @@ function activateLicense() {
     const result = saveLicense(key);
     
     if (result.valid) {
-        showLicenseMessage('Licens aktiverad! TimeWeaver är nu fullt fungerande.', true);
+        showLicenseMessage('Licens aktiverad! TimeGrid är nu fullt fungerande.', true);
         updateLicenseStatusDisplay();
         keyInput.value = '';
         
@@ -1209,6 +1209,8 @@ function deactivateLicense() {
     }
     
     // Ta bort både licens och first_run för att möjliggöra ny testperiod
+    localStorage.removeItem('timegrid_license');
+    localStorage.removeItem('timegrid_first_run');
     localStorage.removeItem('timeweaver_license');
     localStorage.removeItem('timeweaver_first_run');
     

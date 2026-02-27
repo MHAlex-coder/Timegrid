@@ -1,4 +1,4 @@
-# TimeWeaver - Funktionskarta (Script.js)
+# TimeGrid - Funktionskarta (Script.js)
 
 ## INNEHÅLLSFÖRTECKNING MED RADNUMMER
 

@@ -8,7 +8,26 @@ const LICENSE_TYPES = {
   LIFETIME: 'lifetime'
 };
 
-const LICENSE_STORAGE_KEY = 'timeweaver_license';
+const LICENSE_STORAGE_KEY = 'timegrid_license';
+const LEGACY_LICENSE_STORAGE_KEY = 'timeweaver_license';
+const FIRST_RUN_STORAGE_KEY = 'timegrid_first_run';
+const LEGACY_FIRST_RUN_STORAGE_KEY = 'timeweaver_first_run';
+
+function migrateLegacyLicenseStorage() {
+  const legacyLicense = localStorage.getItem(LEGACY_LICENSE_STORAGE_KEY);
+  const currentLicense = localStorage.getItem(LICENSE_STORAGE_KEY);
+
+  if (!currentLicense && legacyLicense) {
+    localStorage.setItem(LICENSE_STORAGE_KEY, legacyLicense);
+  }
+
+  const legacyFirstRun = localStorage.getItem(LEGACY_FIRST_RUN_STORAGE_KEY);
+  const currentFirstRun = localStorage.getItem(FIRST_RUN_STORAGE_KEY);
+
+  if (!currentFirstRun && legacyFirstRun) {
+    localStorage.setItem(FIRST_RUN_STORAGE_KEY, legacyFirstRun);
+  }
+}
 
 // Enkel XOR-kryptering (för obfuskering, inte säkerhet)
 function simpleEncrypt(text, key = 'TW2025KEY') {
@@ -132,12 +151,13 @@ function saveLicense(licenseKey) {
 
 // Hämta licensstatus
 function getLicenseStatus() {
+  migrateLegacyLicenseStorage();
+
   const stored = localStorage.getItem(LICENSE_STORAGE_KEY);
   
   if (!stored) {
     // Kolla om det är första gången (trial börjar)
-    const firstRunKey = 'timeweaver_first_run';
-    const firstRun = localStorage.getItem(firstRunKey);
+    const firstRun = localStorage.getItem(FIRST_RUN_STORAGE_KEY);
     
     if (!firstRun) {
       // Första körningen - starta 30-dagars trial
@@ -152,7 +172,7 @@ function getLicenseStatus() {
       };
       
       localStorage.setItem(LICENSE_STORAGE_KEY, JSON.stringify(trialData));
-      localStorage.setItem(firstRunKey, new Date().toISOString());
+      localStorage.setItem(FIRST_RUN_STORAGE_KEY, new Date().toISOString());
       
       return {
         valid: true,

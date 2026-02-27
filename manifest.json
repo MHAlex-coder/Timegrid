@@ -1,6 +1,6 @@
 {
-  "name": "TimeWeaver - Capacity Planner",
-  "short_name": "TimeWeaver",
+  "name": "TimeGrid - Capacity Planner",
+  "short_name": "TimeGrid",
   "description": "Verktyg för kapacitetsplanering och tidshantering",
   "start_url": "./index.html",
   "display": "standalone",
