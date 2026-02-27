@@ -776,13 +776,10 @@ function t(key) {
 function switchLanguage(lang) {
     currentLanguage = lang;
     localStorage.setItem('selectedLanguage', lang);
-    
-    // Uppdatera alla UI-element
-    updateUILanguage();
-    
+
     // Regenerera tidslinje för att uppdatera veckodagar
     generateTimeline();
-    
+
     // Uppdatera avbrottsloggen
     if (typeof initInterruptionTimeline === 'function') {
         initInterruptionTimeline();
@@ -792,6 +789,12 @@ function switchLanguage(lang) {
     if (typeof initQualityLossTimeline === 'function') {
         initQualityLossTimeline();
     }
+
+    // Uppdatera alla UI-element efter render, så knapptexter inte fastnar i fel språk
+    updateUILanguage();
+
+    // Säkerställ uppdatering även om något renderas asynkront i efterhand
+    setTimeout(updateUILanguage, 0);
 }
 
 // Funktion för att uppdatera alla UI-element med rätt språk
@@ -921,6 +924,10 @@ function updateUILanguage() {
     });
 
     document.querySelectorAll('.add-quality-loss-btn').forEach(btn => {
+        btn.textContent = t('addQualityLoss');
+    });
+
+    document.querySelectorAll('#quality-loss-timeline .quality-loss-day > button').forEach(btn => {
         btn.textContent = t('addQualityLoss');
     });
 }
