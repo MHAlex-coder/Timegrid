@@ -1,0 +1,278 @@
+/* Kvalitetsförlust-tidslinje */
+#quality-loss-container {
+  margin-top: 5px;
+  padding: 0;
+}
+
+#quality-loss-container h2 {
+  display: none;
+}
+
+#quality-loss-timeline {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 180px;
+  gap: 4px;
+}
+
+.quality-loss-day {
+  border: 1px solid #ddd;
+  padding: 6px;
+  min-height: 250px;
+  max-height: 250px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: #f7f9fc;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.quality-loss-day.weekend,
+.quality-loss-day.holiday {
+  background-color: #e0e0e0;
+  pointer-events: none;
+}
+
+.quality-loss-day-header {
+  font-size: 0.75em;
+  font-weight: bold;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 4px;
+}
+
+.quality-loss-tasks-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.quality-loss-task {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  padding: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.7em;
+}
+
+.quality-loss-task-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.quality-loss-task-row input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+}
+
+.quality-loss-task-row input[type="number"] {
+  width: 50px;
+  padding: 2px 4px;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+.quality-loss-task-row select {
+  width: 100px;
+  padding: 2px 4px;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  font-size: 0.9em;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.quality-loss-task-row input[type="text"] {
+  width: 100%;
+  max-width: 150px;
+  padding: 2px 4px;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  font-size: 0.9em;
+}
+
+.quality-loss-task textarea {
+  width: 100%;
+  padding: 4px;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  resize: none;
+  min-height: 35px;
+  font-size: 0.9em;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.quality-loss-summary {
+  font-size: 0.75em;
+  color: #e74c3c;
+  font-weight: bold;
+  padding: 4px;
+  margin-top: 4px;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+.quality-loss-summary:empty {
+  display: none;
+}
+
+/* Snygg scrollbar */
+.quality-loss-tasks-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.quality-loss-tasks-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.quality-loss-tasks-container::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-radius: 3px;
+}
+
+.quality-loss-tasks-container::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
+
+/* Mobile responsive styles */
+@media screen and (max-width: 768px) {
+  #quality-loss-container {
+    margin-top: 15px;
+    padding: 0 5px;
+  }
+  
+  #quality-loss-container h2 {
+    font-size: 1.1em;
+    margin: 10px 0 8px 0;
+  }
+  
+  #quality-loss-timeline {
+    grid-auto-columns: 120px;
+    gap: 3px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .quality-loss-day {
+    padding: 4px;
+    min-height: 180px;
+  }
+  
+  .quality-loss-day-header {
+    font-size: 0.7em;
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+  }
+  
+  .quality-loss-tasks-container {
+    gap: 3px;
+  }
+  
+  .quality-loss-task {
+    padding: 4px;
+    font-size: 0.65em;
+  }
+  
+  .quality-loss-task-row input[type="checkbox"] {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .quality-loss-task-row input[type="number"] {
+    width: 40px;
+    padding: 1px 2px;
+    font-size: 0.85em;
+  }
+  
+  .quality-loss-task-row select {
+    padding: 1px 2px;
+    font-size: 0.85em;
+  }
+  
+  .quality-loss-task textarea {
+    padding: 3px;
+    min-height: 30px;
+    font-size: 0.85em;
+  }
+  
+  .quality-loss-summary {
+    font-size: 0.7em;
+    padding: 3px;
+    margin-top: 3px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #quality-loss-timeline {
+    grid-auto-columns: 100px;
+    gap: 2px;
+  }
+  
+  .quality-loss-day {
+    padding: 3px;
+    min-height: 150px;
+  }
+  
+  .quality-loss-day-header {
+    font-size: 0.65em;
+  }
+  
+  .quality-loss-task {
+    padding: 3px;
+    font-size: 0.6em;
+  }
+  
+  .quality-loss-task-row input[type="number"] {
+    width: 35px;
+  }
+  
+  .quality-loss-task textarea {
+    min-height: 25px;
+    font-size: 0.8em;
+  }
+}
+    .quality-loss-day-header {
+        font-size: 0.75em;
+        padding: 6px;
+    }
+    
+    .quality-loss-tasks-container {
+        padding: 6px;
+        max-height: 300px;
+    }
+    
+    .quality-loss-task {
+        padding: 6px;
+        font-size: 0.75em;
+    }
+}
+
+@media (max-width: 480px) {
+    .quality-loss-day {
+        width: 120px;
+        min-height: 70px;
+        margin: 2px;
+    }
+    
+    .quality-loss-day-header {
+        font-size: 0.7em;
+        padding: 4px;
+    }
+    
+    .quality-loss-tasks-container {
+        padding: 4px;
+    }
+}

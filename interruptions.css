@@ -1,0 +1,234 @@
+#interruption-container {
+  margin-top: 5px;
+  padding: 0;
+}
+
+#interruption-container h2 {
+  display: none;
+}
+
+#interruption-timeline {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 180px;
+  gap: 4px;
+}
+
+.interruption-day {
+  border: 1px solid #ddd;
+  padding: 6px;
+  min-height: 220px;
+  max-height: 220px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: #f7f9fc;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.interruption-day.weekend,
+.interruption-day.holiday {
+  background-color: #e0e0e0;
+  pointer-events: none;
+}
+
+.interruption-day-header {
+  font-size: 0.75em;
+  font-weight: bold;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 4px;
+}
+
+.interruption-tasks-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.interruption-task {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  padding: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.7em;
+}
+
+.interruption-task-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.interruption-task-row input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+}
+
+.interruption-task-row input[type="number"] {
+  width: 50px;
+  padding: 2px 4px;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+.interruption-task-row select {
+  width: 100px;
+  padding: 2px 4px;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  font-size: 0.9em;
+}
+
+.interruption-task textarea {
+  width: 100%;
+  padding: 4px;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  resize: none;
+  min-height: 35px;
+  font-size: 0.9em;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.interruption-summary {
+  font-size: 0.75em;
+  color: #e74c3c;
+  font-weight: bold;
+  padding: 4px;
+  margin-top: 4px;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+.interruption-summary:empty {
+  display: none;
+}
+
+/* Snygg scrollbar */
+.interruption-tasks-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.interruption-tasks-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.interruption-tasks-container::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-radius: 3px;
+}
+
+.interruption-tasks-container::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
+
+/* Mobile responsive styles */
+@media screen and (max-width: 768px) {
+  #interruption-container {
+    margin-top: 15px;
+    padding: 0 5px;
+  }
+  
+  #interruption-container h2 {
+    font-size: 1.1em;
+    margin: 10px 0 8px 0;
+  }
+  
+  #interruption-timeline {
+    grid-auto-columns: 120px;
+    gap: 3px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .interruption-day {
+    padding: 4px;
+    min-height: 180px;
+  }
+  
+  .interruption-day-header {
+    font-size: 0.7em;
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+  }
+  
+  .interruption-tasks-container {
+    gap: 3px;
+  }
+  
+  .interruption-task {
+    padding: 4px;
+    font-size: 0.65em;
+  }
+  
+  .interruption-task-row input[type="checkbox"] {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .interruption-task-row input[type="number"] {
+    width: 40px;
+    padding: 1px 2px;
+    font-size: 0.85em;
+  }
+  
+  .interruption-task-row select {
+    padding: 1px 2px;
+    font-size: 0.85em;
+  }
+  
+  .interruption-task textarea {
+    padding: 3px;
+    min-height: 30px;
+    font-size: 0.85em;
+  }
+  
+  .interruption-summary {
+    font-size: 0.7em;
+    padding: 3px;
+    margin-top: 3px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #interruption-timeline {
+    grid-auto-columns: 100px;
+    gap: 2px;
+  }
+  
+  .interruption-day {
+    padding: 3px;
+    min-height: 150px;
+  }
+  
+  .interruption-day-header {
+    font-size: 0.65em;
+  }
+  
+  .interruption-task {
+    padding: 3px;
+    font-size: 0.6em;
+  }
+  
+  .interruption-task-row input[type="number"] {
+    width: 35px;
+  }
+  
+  .interruption-task textarea {
+    min-height: 25px;
+    font-size: 0.8em;
+  }
+}
