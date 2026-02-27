@@ -1074,7 +1074,11 @@ body {
 // Sätt språk vid sidladdning
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('languageSelect').value = currentLanguage;
-    updateUILanguage();
+    if (typeof switchLanguage === 'function') {
+        switchLanguage(currentLanguage);
+    } else {
+        updateUILanguage();
+    }
     
     // Uppdatera licensstatus i headern
     updateLicenseStatusInHeader();
