@@ -45,7 +45,7 @@ const translations = {
         
         // Avbrottslogg
         interruptionLog: "Avbrottslogg",
-        addInterruption: "Lägg till",
+        addInterruption: "Lägg till avbrott",
         time: "Tid",
         category: "PI/Mail",
         description: "Beskriva ärendet...",
@@ -185,7 +185,7 @@ const translations = {
         totalOvertime: "Övertid totalt",
         interruptionsPiMail: "Avbrott (PI/Mail)",
         qualityLoss: "Kvalitetsförlust",
-        addQualityLoss: "Lägg till",
+        addQualityLoss: "Lägg till slöseri",
         capacityStatusLegend: "📊 <strong>Grön</strong> = God kapacitet (under 85%) | <strong style='color:#f39c12'>Gul</strong> = Hög belastning (85-100%) | <strong style='color:#e74c3c'>Röd</strong> = Överbelastad (över 100%)",
         otherTasks: "Övriga uppgifter",
         overtime: "Övertid",
@@ -412,7 +412,7 @@ const translations = {
         
         // Interruption log
         interruptionLog: "Interruption Log",
-        addInterruption: "Add",
+        addInterruption: "Add interruption",
         time: "Time",
         category: "Call/Email",
         description: "Describe issue...",
@@ -588,7 +588,7 @@ const translations = {
         totalOvertime: "Total overtime",
         interruptionsPiMail: "Interruptions (PI/Mail)",
         qualityLoss: "Quality loss",
-        addQualityLoss: "Add",
+        addQualityLoss: "Add waste",
         capacityStatusLegend: "📊 <strong>Green</strong> = Good capacity (under 85%) | <strong style='color:#f39c12'>Yellow</strong> = High load (85-100%) | <strong style='color:#e74c3c'>Red</strong> = Overloaded (over 100%)",
         otherTasks: "Other tasks",
         overtime: "Overtime",
