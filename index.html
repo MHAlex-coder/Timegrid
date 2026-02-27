@@ -900,29 +900,29 @@ body {
     <div class="menu-divider"></div>
     
     <button class="menu-item submenu-toggle" onclick="toggleThemeSubmenu(); event.stopPropagation();">
-        🎨 Färgschema
+        <span class="submenu-title">🎨 Färgschema</span>
         <span class="arrow" id="themeArrow">▼</span>
     </button>
     <div id="themeSubmenu" class="submenu" style="display: none;">
         <button class="menu-item theme-option" data-theme="purple-blue" onclick="setHeaderTheme('theme-purple-blue')">
             <span class="color-swatch" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></span>
-            Lila-Blå
+            <span class="theme-label">Lila-Blå</span>
         </button>
         <button class="menu-item theme-option" data-theme="gray-blue" onclick="setHeaderTheme('theme-gray-blue')">
             <span class="color-swatch" style="background: linear-gradient(135deg, #6c757d 0%, #4a90e2 100%);"></span>
-            Grå-Blå
+            <span class="theme-label">Grå-Blå</span>
         </button>
         <button class="menu-item theme-option" data-theme="green-teal" onclick="setHeaderTheme('theme-green-teal')">
             <span class="color-swatch" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);"></span>
-            Grön-Turkos
+            <span class="theme-label">Grön-Turkos</span>
         </button>
         <button class="menu-item theme-option" data-theme="orange-red" onclick="setHeaderTheme('theme-orange-red')">
             <span class="color-swatch" style="background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);"></span>
-            Orange-Röd
+            <span class="theme-label">Orange-Röd</span>
         </button>
         <button class="menu-item theme-option" data-theme="dark" onclick="setHeaderTheme('theme-dark')">
             <span class="color-swatch" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);"></span>
-            Mörk
+            <span class="theme-label">Mörk</span>
         </button>
     </div>
     <div class="menu-divider"></div>

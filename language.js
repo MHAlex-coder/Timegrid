@@ -877,18 +877,18 @@ function updateUILanguage() {
     const qualityLossReportBtn = document.querySelector('button[onclick*="generateQualityLossReport"]');
     if (qualityLossReportBtn) qualityLossReportBtn.innerHTML = t('qualityLossReportMenuItem');
     
-    const colorSchemeBtn = document.querySelector('.submenu-toggle');
-    if (colorSchemeBtn && colorSchemeBtn.childNodes[0]) {
-        colorSchemeBtn.childNodes[0].textContent = t('colorScheme') + ' ';
+    const colorSchemeLabel = document.querySelector('.submenu-toggle .submenu-title');
+    if (colorSchemeLabel) {
+        colorSchemeLabel.textContent = t('colorScheme');
     }
     
-    const themeOptions = document.querySelectorAll('.theme-option');
+    const themeOptions = document.querySelectorAll('.theme-option .theme-label');
     if (themeOptions.length >= 5) {
-        themeOptions[0].childNodes[1].textContent = ' ' + t('purpleBlue');
-        themeOptions[1].childNodes[1].textContent = ' ' + t('grayBlue');
-        themeOptions[2].childNodes[1].textContent = ' ' + t('greenTeal');
-        themeOptions[3].childNodes[1].textContent = ' ' + t('orangeRed');
-        themeOptions[4].childNodes[1].textContent = ' ' + t('dark');
+        themeOptions[0].textContent = t('purpleBlue');
+        themeOptions[1].textContent = t('grayBlue');
+        themeOptions[2].textContent = t('greenTeal');
+        themeOptions[3].textContent = t('orangeRed');
+        themeOptions[4].textContent = t('dark');
     }
     
     const settingsBtn = document.querySelector('button[onclick*="openSettingsModal"]');
