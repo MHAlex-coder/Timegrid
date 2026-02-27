@@ -787,6 +787,11 @@ function switchLanguage(lang) {
     if (typeof initInterruptionTimeline === 'function') {
         initInterruptionTimeline();
     }
+
+    // Uppdatera kvalitetsförlustloggen
+    if (typeof initQualityLossTimeline === 'function') {
+        initQualityLossTimeline();
+    }
 }
 
 // Funktion för att uppdatera alla UI-element med rätt språk
@@ -910,4 +915,12 @@ function updateUILanguage() {
     
     const deleteAllBtn = document.querySelector('button[onclick*="clearAllTasks"].danger');
     if (deleteAllBtn) deleteAllBtn.innerHTML = t('deleteAllMenu');
+
+    document.querySelectorAll('.add-interruption-btn').forEach(btn => {
+        btn.textContent = t('addInterruption');
+    });
+
+    document.querySelectorAll('.add-quality-loss-btn').forEach(btn => {
+        btn.textContent = t('addQualityLoss');
+    });
 }

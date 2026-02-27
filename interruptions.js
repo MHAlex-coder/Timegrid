@@ -83,6 +83,7 @@ function renderInterruptionTimeline() {
 
     // Lägg till knapp för nya uppgifter
     const addBtn = document.createElement('button');
+    addBtn.className = 'add-interruption-btn';
     addBtn.style.cssText = 'width: 100%; padding: 4px; margin-top: auto; font-size: 0.7em; background: #f0f0f0; border: 1px dashed #ccc; cursor: pointer; border-radius: 4px;';
     addBtn.textContent = typeof t === 'function' ? t('addInterruption') : 'Lägg till avbrott';
     addBtn.onclick = () => addInterruptionTask(dateStr);
