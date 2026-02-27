@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TimeWeaver - Capacity Planning Tool</title>
+<link rel="stylesheet" href="Style.css">
+
+<!-- PWA Manifest - läggs till dynamiskt via JS för att undvika CORS-fel vid file:// -->
+<script>
+if (location.protocol !== 'file:') {
+  var link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = 'manifest.json';
+  document.head.appendChild(link);
+}
+</script>
+<meta name="theme-color" content="#667eea">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TimeWeaver">
+
+<style>
+/* Modern header styling */
+.modern-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, var(--header-color-1, #667eea) 0%, var(--header-color-2, #764ba2) 100%);
+    padding: 30px 30px;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 1000;
+    min-height: 80px;
+}
+
+/* Färgscheman */
+:root {
+    --header-color-1: #667eea;
+    --header-color-2: #764ba2;
+}
+
+.theme-purple-blue {
+    --header-color-1: #667eea;
+    --header-color-2: #764ba2;
+}
+
+.theme-gray-blue {
+    --header-color-1: #6c757d;
+    --header-color-2: #4a90e2;
+}
+
+.theme-green-teal {
+    --header-color-1: #11998e;
+    --header-color-2: #38ef7d;
+}
+
+.theme-orange-red {
+    --header-color-1: #ee0979;
+    --header-color-2: #ff6a00;
+}
+
+.theme-dark {
+    --header-color-1: #2c3e50;
+    --header-color-2: #34495e;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header-left {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1002;
+}
+
+.header-logo svg {
+    width: 50px;
+    height: 50px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.header-branding h1 {
+    margin: 0;
+    font-size: 1.8em;
+    font-weight: 700;
+}
+
+.header-branding p {
+    margin: 0;
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+.placement-controls {
+    position: fixed;
+    top: 140px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    padding: 15px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 999;
+}
+
+.placement-controls input,
+.placement-controls select {
+    padding: 10px 14px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95em;
+    background: white;
+    color: #333;
+    transition: all 0.2s;
+}
+
+.placement-controls input:focus,
+.placement-controls select:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+}
+
+.placement-controls input[type="number"] {
+    width: 90px;
+}
+
+.placement-controls input[type="text"] {
+    min-width: 220px;
+}
+
+.placement-controls select {
+    min-width: 150px;
+}
+
+.btn-place {
+    padding: 10px 20px;
+    background: white;
+    color: #667eea;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.95em;
+}
+
+.btn-place:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.year-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.15);
+    padding: 8px 15px;
+    border-radius: 8px;
+}
+
+.year-control label {
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.year-control input {
+    width: 80px;
+    padding: 8px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 6px;
+    background: rgba(255,255,255,0.95);
+    font-size: 0.9em;
+}
+
+.year-control button {
+    padding: 8px 16px;
+    background: white;
+    color: #667eea;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.year-control button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Dropdown menu */
+.menu-btn {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.4);
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1em;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1002;
+}
+
+.menu-btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-1px);
+}
+
+.dropdown-menu {
+    position: fixed;
+    right: 10px;
+    top: 50px;
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    min-width: 250px;
+    z-index: 1001;
+    display: none;
+}
+
+.dropdown-menu.show {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-menu h3 {
+    margin: 0 0 15px 0;
+    font-size: 0.9em;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.menu-item.theme-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.color-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border: 2px solid white;
+}
+
+.submenu-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.submenu-toggle .arrow {
+    font-size: 0.8em;
+    transition: transform 0.3s ease;
+}
+
+.submenu-toggle .arrow.open {
+    transform: rotate(-180deg);
+}
+
+.submenu {
+    padding-left: 15px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-left: 2px solid #e0e0e0;
+}
+
+.submenu .menu-item {
+    padding: 8px 12px;
+    font-size: 0.95em;
+}
+
+/* FOOTER */
+.footer-signature {
+    position: fixed;
+    bottom: 0px;
+    right: 20px;
+    font-size: 0.85em;
+    color: #95a5a6;
+    font-style: italic;
+    z-index: 900;
+    padding: 5px 10px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.menu-item {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 5px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.2s;
+    color: #333;
+}
+
+.menu-item:hover {
+    background: #f0f0f0;
+}
+
+.menu-divider {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 10px 0;
+}
+
+.menu-item.danger {
+    color: #e74c3c;
+}
+
+.menu-item.danger:hover {
+    background: #fee;
+}
+
+/* Nya stilar för multi-select och visuell feedback */
+.block.selected {
+    border: 3px solid #3498db !important;
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+    background: linear-gradient(135deg, var(--block-bg-color, #888) 0%, var(--block-bg-color, #888) 70%, #3498db 100%);
+}
+
+.block {
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    user-select: none;
+}
+
+.block:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.block:active {
+    transform: scale(0.98);
+}
+
+/* Swap mode visuell indikation */
+.day.swap-source {
+    background-color: rgba(52, 152, 219, 0.1);
+    border: 2px dashed #3498db;
+}
+
+/* Copy mode cursor */
+.block.copying {
+    cursor: copy !important;
+}
+
+/* Förbättrad context menu */
+.context-menu {
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 8px;
+    z-index: 10000 !important;
+    min-width: 200px;
+}
+
+.context-menu button {
+    transition: background-color 0.2s, transform 0.1s;
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: white;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+
+.context-menu button:hover {
+    transform: translateX(3px);
+    background-color: #ecf0f1;
+}
+
+.context-menu button:active {
+    transform: scale(0.95);
+}
+
+/* Kommentarmarkering på block */
+.comment-indicator {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 16px 16px 0;
+    border-color: transparent #ffd700 transparent transparent;
+    cursor: help;
+    pointer-events: all;
+    z-index: 10000;
+}
+
+/* Custom tooltip för kommentarer */
+.comment-indicator::before {
+    content: attr(data-comment);
+    position: absolute;
+    top: 20px;
+    right: 0;
+    background: #fffbcc;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-width: 250px;
+    min-width: 150px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 10002;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.comment-indicator:hover::before {
+    opacity: 1;
+}
+
+.comment-indicator::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    right: 8px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #fffbcc;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 10002;
+}
+
+.comment-indicator:hover::after {
+    opacity: 1;
+}
+
+.block:has(.comment-indicator:hover) {
+    z-index: 10001;
+}
+
+.block {
+    position: relative;
+    overflow: visible;
+}
+
+/* Modal styling */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    min-width: 400px;
+    text-align: center;
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-content h3 {
+    margin: 0 0 15px 0;
+    color: #2c3e50;
+    font-size: 1.5em;
+}
+
+.modal-content p {
+    color: #666;
+    margin: 0 0 25px 0;
+    font-size: 1em;
+}
+
+.modal-content button {
+    padding: 12px 24px;
+    margin: 5px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 140px;
+}
+
+.modal-content button.forward {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+}
+
+.modal-content button.forward:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+}
+
+.modal-content button.backward {
+    background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+    color: white;
+}
+
+.modal-content button.backward:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(149, 165, 166, 0.4);
+}
+
+.modal-content button.cancel {
+    background: #95a5a6;
+    color: white;
+}
+
+.modal-content button.cancel:hover {
+    background: #7f8c8d;
+    transform: translateY(-2px);
+}
+
+.modal-content button:active {
+    transform: scale(0.98);
+}
+
+/* Info-meddelanden med bättre styling */
+#info {
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: all 0.3s;
+    display: inline-block;
+}
+
+#info:not(:empty) {
+    background-color: #ecf0f1;
+    border-left: 4px solid #3498db;
+}
+
+/* Fil-meny styling */
+#fileMenu button:hover {
+    background-color: #ecf0f1 !important;
+}
+
+#fileMenuBtn:hover {
+    background-color: #d5dbdb !important;
+}
+
+/* Padding för fixed header och placement bar */
+body {
+    padding-top: 260px;
+}
+
+/* Mobile responsive styles */
+@media screen and (max-width: 768px) {
+    * {
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    html, body {
+        overflow-x: hidden;
+        width: 100%;
+    }
+    
+    .modern-header {
+        padding: 8px 10px !important;
+        min-height: 50px !important;
+        position: fixed !important;
+    }
+    
+    .header-content {
+        gap: 10px !important;
+        max-width: 100% !important;
+    }
+    
+    .header-logo svg {
+        width: 30px !important;
+        height: 30px !important;
+    }
+    
+    .header-branding h1 {
+        font-size: 0.9em !important;
+        white-space: nowrap;
+    }
+    
+    .header-branding p {
+        font-size: 0.65em !important;
+    }
+    
+    .header-left {
+        top: 5px !important;
+        left: 5px !important;
+        gap: 6px !important;
+    }
+    
+    .placement-controls {
+        top: 55px !important;
+        flex-wrap: wrap !important;
+        padding: 8px 5px !important;
+        gap: 5px !important;
+        left: 0 !important;
+        right: 0 !important;
+    }
+    
+    .placement-controls input,
+    .placement-controls select {
+        font-size: 0.75em !important;
+        padding: 6px 8px !important;
+        min-width: auto !important;
+        max-width: none !important;
+    }
+    
+    .placement-controls input[type="text"] {
+        width: calc(50% - 5px) !important;
+        min-width: auto !important;
+    }
+    
+    .placement-controls input[type="number"] {
+        width: 60px !important;
+    }
+    
+    .placement-controls select {
+        width: calc(50% - 5px) !important;
+        min-width: auto !important;
+    }
+    
+    .btn-place {
+        padding: 6px 12px !important;
+        font-size: 0.75em !important;
+        width: 100% !important;
+    }
+    
+    .year-control {
+        padding: 5px 8px !important;
+        gap: 5px !important;
+        font-size: 0.75em !important;
+    }
+    
+    .year-control input {
+        width: 50px !important;
+        padding: 5px !important;
+        font-size: 0.75em !important;
+    }
+    
+    .year-control button {
+        padding: 5px 10px !important;
+        font-size: 0.75em !important;
+    }
+    
+    .menu-btn {
+        padding: 6px 10px !important;
+        font-size: 0.75em !important;
+        min-width: auto !important;
+    }
+    
+    body {
+        padding-top: 220px !important;
+    }
+    
+    /* Timeline och tasks */
+    #timeline-container {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        width: 100% !important;
+    }
+    
+    .timeline {
+        min-width: 100% !important;
+    }
+    
+    .timeline .column {
+        min-width: 50px !important;
+        font-size: 0.7em !important;
+    }
+    
+    .task-block {
+        font-size: 0.65em !important;
+        padding: 4px !important;
+        min-height: 30px !important;
+    }
+    
+    /* Modaler */
+    .modal-content {
+        width: 95% !important;
+        max-width: none !important;
+        min-width: auto !important;
+        margin: 10px auto !important;
+        padding: 10px !important;
+    }
+    
+    .task-form input,
+    .task-form select,
+    .task-form textarea {
+        font-size: 0.85em !important;
+        padding: 6px !important;
+    }
+    
+    /* Context menu */
+    .context-menu {
+        min-width: 120px !important;
+        font-size: 0.85em !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .modern-header {
+        padding: 5px !important;
+        min-height: 45px !important;
+    }
+    
+    .header-logo svg {
+        width: 25px !important;
+        height: 25px !important;
+    }
+    
+    .header-branding h1 {
+        font-size: 0.8em !important;
+    }
+    
+    .header-branding p {
+        display: none !important;
+    }
+    
+    .placement-controls {
+        top: 50px !important;
+        flex-direction: column !important;
+        padding: 5px !important;
+        align-items: stretch !important;
+    }
+    
+    .placement-controls input,
+    .placement-controls select,
+    .btn-place {
+        width: 100% !important;
+        margin: 2px 0 !important;
+    }
+    
+    .placement-controls input[type="text"],
+    .placement-controls select {
+        width: 100% !important;
+    }
+    
+    .year-control {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        width: 100% !important;
+    }
+    
+    body {
+        padding-top: 280px !important;
+    }
+    
+    .timeline .column {
+        min-width: 40px !important;
+        font-size: 0.6em !important;
+    }
+    
+    .task-block {
+        font-size: 0.55em !important;
+        padding: 3px !important;
+        min-height: 25px !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- MODERN HEADER -->
+<header class="modern-header">
+    <div class="header-content">
+        <div class="header-left">
+            <div class="header-logo" style="display: none;">
+                <img src="logga.png" alt="Logo" style="height: 50px; width: auto;">
+            </div>
+            <div class="header-branding">
+                <h1 id="mainTitle">TimeGrid</h1>
+                <p id="subtitle">Kapacitetsplaneringsverktyg</p>
+            </div>
+            
+            <div class="year-control">
+                <label for="yearInput">Visa planering för år:</label>
+                <input id="yearInput" type="number" min="2000" max="2100" placeholder="2025" value="" style="width: 80px; padding: 8px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95);">
+                <button onclick="setTimelineYear()" style="padding: 8px 16px; border-radius: 6px; border: none; background: rgba(255,255,255,0.9); color: #333; cursor: pointer; font-weight: 600; transition: all 0.2s;">Uppdatera Tidslinje</button>
+            </div>
+            <select id="languageSelect" onchange="switchLanguage(this.value)" style="padding: 8px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95); margin-left: 10px;">
+                <option value="sv">Svenska</option>
+                <option value="en">English</option>
+            </select>
+            <span id="licenseStatusIndicator" style="margin-left: 20px; padding: 6px 12px; border-radius: 6px; background: rgba(255,255,255,0.15); font-size: 0.9em; color: rgba(255,255,255,0.95); font-weight: 500;">
+                <span id="licenseText">Läser in...</span>
+            </span>
+        </div>
+        
+        <div class="header-right">
+            <button class="menu-btn" onclick="toggleMenu()">☰ Meny</button>
+        </div>
+    </div>
+</header>
+
+<!-- PLACEMENT CONTROLS BAR -->
+<div class="placement-controls">
+    <input id="taskName" type="text" placeholder="Projekt namn (t.ex. P2)" title="Uppgiftens namn" />
+    <select id="taskType" title="Välj uppgiftstyp">
+        <option value="project">Projekt</option>
+        <option value="support">Support</option>
+        <option value="change">Change</option>
+        <option value="forbattring">Förbättring</option>
+        <option value="omarbete">Omarbete</option>
+        <option value="sent_tillagg">Sent Tillägg</option>
+        <option value="eplan_underhall">Eplan</option>
+    </select>
+    <input id="taskHours" type="number" placeholder="10" title="Antal timmar" />
+    <button id="placeTaskBtn" class="btn-place" onclick="startAddTask()">📌 Placera uppgift</button>
+</div>
+
+<!-- DROPDOWN MENU -->
+<div id="dropdownMenu" class="dropdown-menu">
+    <h3>Meny</h3>
+    <button class="menu-item" onclick="generateWeeklyReport(); toggleMenu();">📊 Beläggningsrapport</button>
+    <button class="menu-item" onclick="generateInterruptionReport(); toggleMenu();">📞 Avbrottsrapport</button>
+    <button class="menu-item" onclick="generateQualityLossReport(); toggleMenu();">⚠️ Kvalitetsförlustrappport</button>
+    <div class="menu-divider"></div>
+    
+    <button class="menu-item submenu-toggle" onclick="toggleThemeSubmenu(); event.stopPropagation();">
+        🎨 Färgschema
+        <span class="arrow" id="themeArrow">▼</span>
+    </button>
+    <div id="themeSubmenu" class="submenu" style="display: none;">
+        <button class="menu-item theme-option" data-theme="purple-blue" onclick="setHeaderTheme('theme-purple-blue')">
+            <span class="color-swatch" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></span>
+            Lila-Blå
+        </button>
+        <button class="menu-item theme-option" data-theme="gray-blue" onclick="setHeaderTheme('theme-gray-blue')">
+            <span class="color-swatch" style="background: linear-gradient(135deg, #6c757d 0%, #4a90e2 100%);"></span>
+            Grå-Blå
+        </button>
+        <button class="menu-item theme-option" data-theme="green-teal" onclick="setHeaderTheme('theme-green-teal')">
+            <span class="color-swatch" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);"></span>
+            Grön-Turkos
+        </button>
+        <button class="menu-item theme-option" data-theme="orange-red" onclick="setHeaderTheme('theme-orange-red')">
+            <span class="color-swatch" style="background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);"></span>
+            Orange-Röd
+        </button>
+        <button class="menu-item theme-option" data-theme="dark" onclick="setHeaderTheme('theme-dark')">
+            <span class="color-swatch" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);"></span>
+            Mörk
+        </button>
+    </div>
+    <div class="menu-divider"></div>
+    
+    <button class="menu-item" onclick="openSettingsModal(); toggleMenu();">⚙️ Inställningar</button>
+    <button class="menu-item" onclick="openLicenseModal(); toggleMenu();">🔑 Licens</button>
+    <button class="menu-item" onclick="downloadData(); toggleMenu();">💾 Spara till fil</button>
+    <button class="menu-item" onclick="document.getElementById('uploadFile').click(); toggleMenu();">📂 Ladda fil</button>
+    <input type="file" id="uploadFile" accept=".json" onchange="loadData(event)" style="display:none;">
+    <button class="menu-item" onclick="window.open('ANVÄNDARMANUAL.html', '_blank'); toggleMenu();">📘 Användarmanual</button>
+    <div class="menu-divider"></div>
+    <button class="menu-item danger" onclick="clearAllTasks(); toggleMenu();">🗑 Radera allt</button>
+</div>
+
+<!-- LICENSE MODAL -->
+<div id="licenseModal" class="modal-overlay" style="display:none;" onclick="if(event.target === this) closeLicenseModal()">
+    <div class="modal-content" style="max-width: 500px;">
+        <h2>🔑 Licenshantering</h2>
+        
+        <div id="licenseStatusDisplay" style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <p style="margin: 0; font-weight: 600;">Status läses in...</p>
+        </div>
+        
+        <h3>Aktivera ny licens</h3>
+        <p style="font-size: 0.9em; color: #666; margin-bottom: 10px;">
+            Ange din licensnyckel nedan för att aktivera TimeWeaver.
+        </p>
+        
+        <div style="margin-bottom: 15px;">
+            <label for="licenseKeyInput" style="display: block; margin-bottom: 5px; font-weight: 600;">Licensnyckel:</label>
+            <textarea 
+                id="licenseKeyInput" 
+                rows="4" 
+                style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-family: monospace; font-size: 0.9em;"
+                placeholder="Klistra in din licensnyckel här..."></textarea>
+        </div>
+        
+        <div id="licenseMessage" style="margin-bottom: 15px; padding: 10px; border-radius: 6px; display: none;"></div>
+        
+        <div style="display: flex; gap: 10px; justify-content: space-between; align-items: center;">
+            <button onclick="deactivateLicense()" style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                🗑 Inaktivera Licens
+            </button>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="closeLicenseModal()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                    Stäng
+                </button>
+                <button onclick="activateLicense()" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                    Aktivera Licens
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="settingsModal" class="modal-overlay" style="display:none;" onclick="if(event.target === this) closeSettingsModal()">
+    <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+        <h2>⚙️ Inställningar</h2>
+        
+        <h3>Övriga uppgifter (Projekt-typ)</h3>
+        <p style="font-size: 0.9em; color: #666; margin-bottom: 10px;">
+            <strong>OBS:</strong> "Projekt" kan inte redigeras och ligger alltid först i listan.
+        </p>
+        <div id="taskTypeSettings"></div>
+        <button onclick="addNewTaskType()" style="margin-top: 10px; padding: 8px 16px;">➕ Lägg till uppgiftstyp</button>
+        
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
+        
+        <h3>Avbrottslogg - Avdelningar</h3>
+        <div id="departmentSettings"></div>
+        <button onclick="addNewDepartment()" style="margin-top: 10px; padding: 8px 16px;">➕ Lägg till avdelning</button>
+        
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
+        
+        <h3>Avbrottslogg - Kontaktmetoder</h3>
+        <div id="contactSettings"></div>
+        <button onclick="addNewContact()" style="margin-top: 10px; padding: 8px 16px;">➕ Lägg till kontaktmetod</button>
+        
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
+        
+        <h3>Kvalitetsförluster - Typer av förluster</h3>
+        <p style="font-size: 0.9em; color: #666; margin-bottom: 10px;">
+            Anpassa vilka typer av kvalitetsförluster som kan rapporteras. All tid som registreras räknas som slöseri.
+        </p>
+        <div id="qualityLossSettings"></div>
+        <button onclick="addNewQualityLossType()" style="margin-top: 10px; padding: 8px 16px;">➕ Lägg till kvalitetsförlustyp</button>
+        
+        <div style="margin-top: 30px; text-align: right;">
+            <button onclick="closeSettingsModal()" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">Stäng</button>
+        </div>
+    </div>
+</div>
+
+<!-- INFO MESSAGE -->
+<div id="info-container" style="position: fixed; top: 200px; left: 0; right: 0; padding: 10px 20px; background: white; z-index: 998; box-shadow: 0 2px 4px rgba(0,0,0,0.05); min-height: 20px;">
+    <span id="info"></span>
+</div>
+
+<!-- TIMELINE -->
+<div id="timeline" class="timeline"></div>
+
+<div id="interruption-container">
+    <h2>Avbrottslogg</h2>
+    <div id="interruption-timeline" class="timeline"></div>
+</div>
+
+<div id="quality-loss-container">
+    <h2>Kvalitetsförluster</h2>
+    <div id="quality-loss-timeline" class="timeline"></div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer-signature">Created by Henrik Alexanderson</div>
+
+<!-- SCRIPT-FILER: LADDAS I RÄTT ORDNING -->
+<!-- 1. Konfiguration & globala variabler måste laddas först -->
+<script src="config.js"></script>
+
+<!-- 2. Licenshantering (måste laddas tidigt) -->
+<script src="license.js"></script>
+
+<!-- 3. Språkhantering (måste laddas tidigt eftersom rapporter använder t()) -->
+<script src="language.js"></script>
+
+<!-- 4. Grundläggande funktioner -->
+<script src="calendar.js"></script>
+<script src="storage.js"></script>
+<script src="settings.js"></script>
+
+<!-- 5. Avbrottstidslinje (måste laddas före Script.js som använder den) -->
+<script src="interruptions.js"></script>
+<link rel="stylesheet" href="interruptions.css">
+
+<!-- 6. Kvalitetsförluster-tidslinje -->
+<script src="quality-loss.js"></script>
+<link rel="stylesheet" href="quality-loss.css">
+
+<!-- 7. Användarinteraktion -->
+<script src="keyboard.js"></script>
+<script src="selection.js"></script>
+
+<!-- 8. Huvudfunktionalitet -->
+<script src="Script.js"></script>
+
+<div id="reportContainer"></div>
+
+<script>
+// Sätt språk vid sidladdning
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('languageSelect').value = currentLanguage;
+    updateUILanguage();
+    
+    // Uppdatera licensstatus i headern
+    updateLicenseStatusInHeader();
+});
+</script>
+
+<div id="directionModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 id="modalTitle">Schemaläggning av projekt</h3>
+        <p>Hur ska projektet allokeras från startdatumet (<span id="selectedDateSpan"></span>)?</p>
+        <button class="backward" onclick="confirmProjectPlacement('backward')">Bakåt i tiden</button>
+        <button class="forward" onclick="confirmProjectPlacement('forward')">Framåt i tiden</button>
+        <button class="cancel" onclick="cancelPlacement()">Avbryt</button>
+    </div>
+</div>
+
+<script>
+// Toggle dropdown menu
+function toggleMenu() {
+    const menu = document.getElementById('dropdownMenu');
+    menu.classList.toggle('show');
+}
+
+function toggleThemeSubmenu() {
+    const submenu = document.getElementById('themeSubmenu');
+    const arrow = document.getElementById('themeArrow');
+    
+    if (submenu.style.display === 'none') {
+        submenu.style.display = 'block';
+        arrow.classList.add('open');
+    } else {
+        submenu.style.display = 'none';
+        arrow.classList.remove('open');
+    }
+}
+
+// Close menu when clicking outside
+window.addEventListener('click', function(e) {
+    const menu = document.getElementById('dropdownMenu');
+    const menuBtn = document.querySelector('.menu-btn');
+    if (menu && menuBtn && !menu.contains(e.target) && !menuBtn.contains(e.target)) {
+        menu.classList.remove('show');
+    }
+});
+
+// ===============================================
+// LICENSE MODAL FUNCTIONS
+// ===============================================
+
+function openLicenseModal() {
+    const modal = document.getElementById('licenseModal');
+    modal.style.display = 'flex';
+    updateLicenseStatusDisplay();
+}
+
+function closeLicenseModal() {
+    const modal = document.getElementById('licenseModal');
+    modal.style.display = 'none';
+    document.getElementById('licenseKeyInput').value = '';
+    hideLicenseMessage();
+}
+
+function updateLicenseStatusDisplay() {
+    const status = getLicenseStatus();
+    const display = document.getElementById('licenseStatusDisplay');
+    
+    if (status.valid) {
+        display.style.background = '#d4edda';
+        display.style.color = '#155724';
+        display.innerHTML = `
+            <p style="margin: 0; font-weight: 600;">✅ Giltig licens</p>
+            <p style="margin: 5px 0 0 0; font-size: 0.95em;">${formatLicenseStatus(status)}</p>
+        `;
+    } else {
+        display.style.background = '#f8d7da';
+        display.style.color = '#721c24';
+        display.innerHTML = `
+            <p style="margin: 0; font-weight: 600;">❌ Ingen giltig licens</p>
+            <p style="margin: 5px 0 0 0; font-size: 0.95em;">${status.error || 'Aktivera en licens för att använda TimeWeaver'}</p>
+        `;
+    }
+}
+
+function showLicenseMessage(message, isSuccess) {
+    const msgDiv = document.getElementById('licenseMessage');
+    msgDiv.textContent = message;
+    msgDiv.style.display = 'block';
+    msgDiv.style.background = isSuccess ? '#d4edda' : '#f8d7da';
+    msgDiv.style.color = isSuccess ? '#155724' : '#721c24';
+    msgDiv.style.border = `1px solid ${isSuccess ? '#c3e6cb' : '#f5c6cb'}`;
+}
+
+function hideLicenseMessage() {
+    const msgDiv = document.getElementById('licenseMessage');
+    msgDiv.style.display = 'none';
+}
+
+function activateLicense() {
+    const keyInput = document.getElementById('licenseKeyInput');
+    const key = keyInput.value.trim();
+    
+    if (!key) {
+        showLicenseMessage('Vänligen ange en licensnyckel', false);
+        return;
+    }
+    
+    const result = saveLicense(key);
+    
+    if (result.valid) {
+        showLicenseMessage('Licens aktiverad! TimeWeaver är nu fullt fungerande.', true);
+        updateLicenseStatusDisplay();
+        keyInput.value = '';
+        
+        // Uppdatera licensstatus i headern
+        updateLicenseStatusInHeader();
+        
+        setTimeout(() => {
+            closeLicenseModal();
+        }, 2000);
+    } else {
+        showLicenseMessage(result.error || 'Ogiltig licensnyckel', false);
+    }
+}
+
+function deactivateLicense() {
+    if (!confirm('Är du säker på att du vill inaktivera licensen?\n\nDetta kommer även ta bort testperioden så du kan testa nycklar från början.')) {
+        return;
+    }
+    
+    // Ta bort både licens och first_run för att möjliggöra ny testperiod
+    localStorage.removeItem('timeweaver_license');
+    localStorage.removeItem('timeweaver_first_run');
+    
+    showLicenseMessage('Licens inaktiverad. Nästa gång du startar applikationen får du en ny 30-dagars testperiod.', true);
+    updateLicenseStatusDisplay();
+    
+    setTimeout(() => {
+        // Ladda om sidan för att starta ny testperiod
+        location.reload();
+    }, 2000);
+}
+
+function updateLicenseStatusInHeader() {
+    const status = getLicenseStatus();
+    const indicator = document.getElementById('licenseStatusIndicator');
+    const text = document.getElementById('licenseText');
+    const placeBtn = document.getElementById('placeTaskBtn');
+    
+    if (!indicator || !text) return;
+    
+    if (status.valid) {
+        // Giltig licens
+        if (status.type === 'trial') {
+            text.textContent = `🔓 Testversion (${status.daysLeft} dagar kvar)`;
+        } else if (status.type === 'annual') {
+            text.textContent = `🔓 Årslicens (${status.daysLeft} dagar kvar)`;
+        } else if (status.type === 'lifetime') {
+            text.textContent = '🔓 Evighetslicens';
+        }
+        
+        indicator.style.cursor = 'default';
+        indicator.onclick = null;
+        
+        // Aktivera placera-knappen
+        if (placeBtn) {
+            placeBtn.style.opacity = '1';
+            placeBtn.style.cursor = 'pointer';
+            placeBtn.title = 'Placera uppgift på tidslinjen';
+        }
+    } else {
+        // Ingen giltig licens
+        text.textContent = '🔒 Ingen licens - Klicka här';
+        indicator.style.cursor = 'pointer';
+        indicator.style.textDecoration = 'underline';
+        indicator.onclick = () => {
+            toggleMenu();
+            setTimeout(() => openLicenseModal(), 100);
+        };
+        
+        // Inaktivera placera-knappen visuellt
+        if (placeBtn) {
+            placeBtn.style.opacity = '0.5';
+            placeBtn.style.cursor = 'not-allowed';
+            placeBtn.title = 'Licens krävs för att placera uppgifter. Klicka på "🔒 Ingen licens" för att aktivera.';
+        }
+    }
+}
+
+// Set header theme
+function setHeaderTheme(themeName) {
+    // Ta bort alla befintliga tema-klasser
+    document.body.classList.remove('theme-purple-blue', 'theme-gray-blue', 'theme-green-teal', 'theme-orange-red', 'theme-dark');
+    // Lägg till valt tema
+    document.body.classList.add(themeName);
+    // Spara valet i localStorage
+    localStorage.setItem('headerTheme', themeName);
+    // Stäng menyn
+    toggleMenu();
+}
+
+// Ladda sparat tema vid sidladdning
+window.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('headerTheme');
+    if (savedTheme) {
+        document.body.classList.add(savedTheme);
+    } else {
+        // Sätt standardtema
+        document.body.classList.add('theme-purple-blue');
+    }
+});
+
+// Registrera Service Worker för PWA (endast vid HTTP/HTTPS, inte file://)
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+            .then(reg => console.log('Service Worker registrerad!', reg))
+            .catch(err => console.log('Service Worker fel:', err));
+    });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeWeaver - Användarmanual</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code&display=swap');
+        
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #7c3aed;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.7;
+            color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header .emoji {
+            font-size: 4em;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .version {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin-top: 20px;
+            font-size: 0.9em;
+            backdrop-filter: blur(10px);
+        }
+        
+        .content {
+            padding: 60px 60px;
+        }
+        
+        .toc {
+            background: var(--light);
+            border-left: 4px solid var(--primary-color);
+            padding: 30px;
+            margin: 40px 0;
+            border-radius: 8px;
+        }
+        
+        .toc h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .toc ol {
+            list-style: none;
+            counter-reset: toc-counter;
+        }
+        
+        .toc li {
+            counter-increment: toc-counter;
+            margin: 12px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .toc li::before {
+            content: counter(toc-counter);
+            position: absolute;
+            left: 0;
+            background: var(--primary-color);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        
+        .toc a {
+            color: var(--dark);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .toc a:hover {
+            color: var(--primary-color);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            font-size: 2em;
+            margin: 50px 0 25px 0;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            font-size: 1.5em;
+            margin: 35px 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h3::before {
+            content: '▸';
+            color: var(--secondary-color);
+            font-size: 1.2em;
+        }
+        
+        h4 {
+            color: var(--dark);
+            font-size: 1.2em;
+            margin: 25px 0 15px 0;
+            font-weight: 600;
+        }
+        
+        p {
+            margin: 15px 0;
+            color: #374151;
+        }
+        
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin: 10px 0;
+            color: #374151;
+        }
+        
+        .feature-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-left: 4px solid var(--secondary-color);
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+        
+        .feature-box h3 {
+            margin-top: 0;
+        }
+        
+        .info-box {
+            background: #dbeafe;
+            border-left: 4px solid var(--primary-color);
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid var(--warning-color);
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .success-box {
+            background: #d1fae5;
+            border-left: 4px solid var(--success-color);
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        tr:hover {
+            background: var(--light);
+        }
+        
+        code {
+            background: #f1f5f9;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em;
+            color: #db2777;
+        }
+        
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 25px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 25px 0;
+            font-family: 'Fira Code', monospace;
+            line-height: 1.6;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+        
+        .badge-new {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .badge-important {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .badge-tip {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .steps {
+            counter-reset: step-counter;
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .steps li {
+            counter-increment: step-counter;
+            padding: 15px 15px 15px 60px;
+            margin: 15px 0;
+            background: var(--light);
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+        
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .footer p {
+            color: rgba(255,255,255,0.8);
+            margin: 10px 0;
+        }
+        
+        .new-features {
+            background: linear-gradient(135deg, #10b98120 0%, #059b6920 100%);
+            border-left: 4px solid var(--success-color);
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        
+        .new-features h3 {
+            color: var(--success-color);
+            margin-top: 0;
+        }
+        
+        .new-features ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .new-features li {
+            padding-left: 30px;
+            position: relative;
+            margin: 12px 0;
+        }
+        
+        .new-features li::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+            }
+            
+            .header {
+                page-break-after: avoid;
+            }
+            
+            h2, h3 {
+                page-break-after: avoid;
+            }
+            
+            table, pre, .feature-box, .info-box {
+                page-break-inside: avoid;
+            }
+        }
+        
+        @page {
+            margin: 2cm;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="emoji">📘</span>
+            <h1>TimeWeaver</h1>
+            <p>Användarmanual</p>
+            <div class="version">Version 2.0 | December 2025</div>
+        </div>
+        
+        <div class="content">
+            <div class="toc">
+                <h2>📑 Innehållsförteckning</h2>
+                <ol>
+                    <li><a href="#introduktion">Introduktion</a></li>
+                    <li><a href="#komma-igang">Komma igång</a></li>
+                    <li><a href="#grundlaggande">Grundläggande funktioner</a></li>
+                    <li><a href="#uppgifter">Arbeta med uppgifter</a></li>
+                    <li><a href="#kommentarer">Kommentarer på block</a></li>
+                    <li><a href="#installningar">Inställningar och anpassning</a></li>
+                    <li><a href="#tidslinje">Tidslinjehantering</a></li>
+                    <li><a href="#avbrott">Avbrottslogg</a></li>
+                    <li><a href="#kvalitet">Kvalitetsförluster</a></li>
+                    <li><a href="#rapporter">Rapporter</a></li>
+                    <li><a href="#avancerat">Avancerade funktioner</a></li>
+                    <li><a href="#tips">Tips och tricks</a></li>
+                    <li><a href="#felsok">Felsökning</a></li>
+                </ol>
+            </div>
+
+            <div class="new-features">
+                <h3>🎉 Nyheter i version 2.0</h3>
+                <ul>
+                    <li>Kommentarer på block med gul indikator</li>
+                    <li>Anpassningsbara uppgiftstyper, avdelningar och kontaktmetoder</li>
+                    <li>Automatisk färggenerering för nya uppgiftstyper</li>
+                    <li>Kvalitetsförlustlogg med projektkoppling</li>
+                    <li>Kvalitetsförlustrapport med detaljerad analys</li>
+                    <li>Flerspråkigt stöd - svenska och engelska</li>
+                    <li>Språkval i alla rapporter och CSV-exporter</li>
+                    <li>Förbättrad mobil responsivitet</li>
+                    <li>Auto-scroll till dagens datum</li>
+                    <li>Kommentarer bevaras vid omberäkning av projekt</li>
+                    <li>Flexibel waste-markering för kvalitetsanalys</li>
+                </ul>
+            </div>
+
+            <section id="introduktion">
+                <h2>1. Introduktion</h2>
+                
+                <div class="feature-box">
+                    <h3>Vad är TimeWeaver?</h3>
+                    <p>TimeWeaver är ett kraftfullt verktyg för kapacitetsplanering som hjälper dig att:</p>
+                    <ul>
+                        <li>📊 Planera och visualisera projektuppgifter över tid</li>
+                        <li>⏱️ Hantera arbetskapacitet per dag och vecka</li>
+                        <li>💬 Lägga till kommentarer på uppgifter och block</li>
+                        <li>⚙️ Anpassa uppgiftstyper, avdelningar och kontaktmetoder</li>
+                        <li>📞 Logga och analysera avbrott</li>
+                        <li>� Spåra och analysera kvalitetsförluster</li>
+                        <li>📈 Generera detaljerade beläggnings-, avbrotts- och kvalitetsförlustrapporter</li>
+                        <li>🔄 Använda undo/redo för att säkert experimentera med planeringen</li>
+                        <li>🌍 Arbeta på svenska eller engelska</li>
+                        <li>📱 Fungerar utmärkt på både desktop och mobila enheter</li>
+                    </ul>
+                </div>
+
+                <h3>För vem är verktyget?</h3>
+                <ul>
+                    <li><strong>Projektledare</strong> som behöver planera teamets kapacitet</li>
+                    <li><strong>Team leads</strong> som behöver fördela arbete</li>
+                    <li><strong>Verksamhetsanalytiker</strong> som vill förstå avbrott och kvalitetsförluster</li>
+                    <li><strong>Kvalitetsansvariga</strong> som arbetar med kontinuerlig förbättring</li>
+                    <li><strong>Organisationer</strong> som arbetar med Six Sigma och Lean</li>
+                </ul>
+            </section>
+
+            <section id="komma-igang">
+                <h2>2. Komma igång</h2>
+                
+                <h3>Öppna verktyget</h3>
+                <ol class="steps">
+                    <li>Öppna filen <code>Index.html</code> i din webbläsare</li>
+                    <li>Verktyget laddar automatiskt din senast sparade data från webbläsarens lokala lagring</li>
+                    <li>Standard projekttid per dag är <strong>7 timmar</strong></li>
+                    <li>Tidslinjen scrollar automatiskt till dagens datum</li>
+                </ol>
+
+                <h3>Första gången du använder verktyget</h3>
+                <p>När du öppnar verktyget första gången ser du:</p>
+                <ul>
+                    <li>En tidslinje för innevarande år som automatiskt visar dagens datum</li>
+                    <li>Kontrollpanel längst upp för att lägga till uppgifter</li>
+                    <li>Filmenyn (☰) för att spara/ladda data</li>
+                    <li>Inställningsknapp (⚙️) för att anpassa verktyget</li>
+                    <li>Tom avbrottslogg längst ner</li>
+                </ul>
+
+                <div class="info-box">
+                    <strong>📱 Mobil användning</strong><br>
+                    TimeWeaver är fullständigt responsiv och fungerar utmärkt på smartphones och surfplattor med optimerad layout för små skärmar och touch-vänlig interface.
+                </div>
+            </section>
+
+            <section id="grundlaggande">
+                <h2>3. Grundläggande funktioner</h2>
+                
+                <h3>Ändra visningsår</h3>
+                <ol class="steps">
+                    <li>Använd fältet <strong>"Visa planering för år:"</strong> längst upp</li>
+                    <li>Ange önskat år (t.ex. 2025)</li>
+                    <li>Klicka på <strong>"Uppdatera Tidslinje"</strong></li>
+                    <li>Tidslinjen uppdateras för det valda året och scrollar till dagens datum</li>
+                </ol>
+
+                <h3>Navigering i tidslinjen</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Element</th>
+                            <th>Beskrivning</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Helger</strong></td>
+                            <td>Visas med grå bakgrund</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Röda helgdagar</strong></td>
+                            <td>Markeras automatiskt (svenska helgdagar)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Auto-scroll</strong></td>
+                            <td>Sidan scrollar automatiskt till dagens datum vid laddning</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kommentarsindikator</strong></td>
+                            <td>Gul triangel (💛) visas på block med kommentarer</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Justera max arbetstid per dag</h3>
+                <p>Varje dag har ett <strong>max-timmar fält</strong> (standard 7h):</p>
+                <ol class="steps">
+                    <li>Klicka i max-timmar fältet för en specifik dag</li>
+                    <li>Ändra värdet (t.ex. till 8 för övertid, eller 4 för halvdag)</li>
+                    <li>Tidslinjen räknas om automatiskt</li>
+                    <li>Övertid (över 8h) markeras i beläggningsrapporten</li>
+                </ol>
+            </section>
+
+            <section id="uppgifter">
+                <h2>4. Arbeta med uppgifter</h2>
+                
+                <h3>Lägga till en uppgift</h3>
+                <ol class="steps">
+                    <li>Fyll i uppgiftsformuläret med namn, timmar och typ</li>
+                    <li>Klicka på <strong>"Placera uppgift"</strong></li>
+                    <li>Välj startdatum i tidslinjen</li>
+                    <li>Välj allokeringsriktning (Framåt eller Bakåt i tiden)</li>
+                    <li>Uppgiften placeras automatiskt</li>
+                </ol>
+
+                <h3>Uppgiftstyper</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Typ</th>
+                            <th>Färg</th>
+                            <th>Användning</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Projekt</strong></td>
+                            <td>Blå</td>
+                            <td>Ordinarie projektarbete</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Support</strong></td>
+                            <td>Grön</td>
+                            <td>Supportärenden</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Change Request</strong></td>
+                            <td>Orange</td>
+                            <td>Ändringar i befintliga system</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Förbättring</strong></td>
+                            <td>Lila</td>
+                            <td>Förbättringsarbete</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Omarbete</strong></td>
+                            <td>Röd</td>
+                            <td>Arbete som behöver göras om (waste)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sent Tillägg</strong></td>
+                            <td>Rosa</td>
+                            <td>Sent inkomna uppgifter (waste)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="success-box">
+                    <strong>✨ Ny funktion:</strong> Du kan lägga till egna uppgiftstyper via inställningsmenyn! Anpassade typer får automatiskt genererade unika färger.
+                </div>
+
+                <h3>Flytta och kopiera uppgifter</h3>
+                <ul>
+                    <li><strong>Flytta:</strong> Klicka och dra uppgiften till önskad dag</li>
+                    <li><strong>Kopiera:</strong> Håll ned Ctrl och dra uppgiften</li>
+                    <li><strong>Ta bort:</strong> Högerklicka och välj "Radera"</li>
+                </ul>
+            </section>
+
+            <section id="kommentarer">
+                <h2>5. Kommentarer på block</h2>
+                
+                <div class="feature-box">
+                    <h3>💬 Ny funktion i version 2.0</h3>
+                    <p>Du kan nu lägga till kommentarer på valfritt block i tidslinjen för att dokumentera viktiga detaljer.</p>
+                </div>
+
+                <h3>Lägga till en kommentar</h3>
+                <ol class="steps">
+                    <li>Högerklicka på blocket där du vill lägga till en kommentar</li>
+                    <li>Välj <strong>"💬 Lägg till kommentar"</strong> från menyn</li>
+                    <li>Skriv din kommentar i dialogrutan</li>
+                    <li>Klicka <strong>OK</strong></li>
+                    <li>En <strong>gul triangel (💛)</strong> visas i övre högra hörnet av blocket</li>
+                </ol>
+
+                <h3>Visa kommentarer</h3>
+                <p>Håll muspekaren över den gula triangeln för att se kommentaren i en tooltip som ligger framför alla andra element.</p>
+
+                <h3>Redigera och ta bort kommentarer</h3>
+                <ul>
+                    <li><strong>Redigera:</strong> Högerklicka → "✏ Redigera kommentar"</li>
+                    <li><strong>Ta bort:</strong> Högerklicka → "🗑 Ta bort kommentar"</li>
+                </ul>
+
+                <div class="success-box">
+                    <strong>✅ Viktigt:</strong> Kommentarer bevaras automatiskt när du ändrar projekttid eller omallokerar uppgifter!
+                </div>
+            </section>
+
+            <section id="installningar">
+                <h2>6. Inställningar och anpassning</h2>
+                
+                <div class="feature-box">
+                    <h3>⚙️ Anpassa verktyget efter dina behov</h3>
+                    <p>TimeWeaver låter dig anpassa uppgiftstyper, avdelningar och kontaktmetoder via inställningsmenyn.</p>
+                </div>
+
+                <h3>Öppna inställningar</h3>
+                <ol class="steps">
+                    <li>Klicka på <strong>⚙️ Inställningar</strong> knappen längst upp till höger</li>
+                    <li>Inställningsmenyn öppnas med tre flikar</li>
+                    <li>Alla ändringar sparas automatiskt</li>
+                </ol>
+
+                <h3>Hantera uppgiftstyper</h3>
+                <h4>Lägga till ny uppgiftstyp:</h4>
+                <ol class="steps">
+                    <li>Öppna fliken <strong>Uppgiftstyper</strong></li>
+                    <li>Skriv namnet på den nya typen (t.ex. "Utbildning")</li>
+                    <li>Markera <strong>"Detta är waste"</strong> om typen ska räknas som kvalitetsförlust</li>
+                    <li>Klicka <strong>"Lägg till uppgiftstyp"</strong></li>
+                    <li>Den nya typen får automatiskt en unik färg</li>
+                </ol>
+
+                <div class="info-box">
+                    <strong>🎨 Automatisk färggenerering:</strong> Nya uppgiftstyper får automatiskt genererade unika färger baserat på typens namn, vilket garanterar konsistent färgkodning.
+                </div>
+
+                <h3>Hantera avdelningar och kontaktmetoder</h3>
+                <p>Anpassa vilka avdelningar och kontaktmetoder som visas i avbrottsloggen:</p>
+                <ul>
+                    <li>Lägg till organisationsspecifika avdelningar</li>
+                    <li>Lägg till era kontaktkanaler (Slack, SMS, etc.)</li>
+                    <li>Ta bort oanvända alternativ</li>
+                </ul>
+            </section>
+
+            <section id="tidslinje">
+                <h2>7. Tidslinjehantering</h2>
+                
+                <h3>Mötestid</h3>
+                <p>Varje dag kan ha bokad mötestid som minskar tillgänglig projekttid:</p>
+                <ol class="steps">
+                    <li>Hitta <strong>"Mötestid (h)"</strong> fältet under varje dag</li>
+                    <li>Ange antal timmar (t.ex. 2)</li>
+                    <li>Tillgänglig projekttid minskas automatiskt</li>
+                </ol>
+
+                <h3>Färgkodning av dagar</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Färg</th>
+                            <th>Beläggning</th>
+                            <th>Betydelse</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>🟢 Grön</td>
+                            <td>&lt; 85%</td>
+                            <td>God kapacitet, mer arbete kan läggas till</td>
+                        </tr>
+                        <tr>
+                            <td>🟡 Gul</td>
+                            <td>85-100%</td>
+                            <td>Hög beläggning, nära maxkapacitet</td>
+                        </tr>
+                        <tr>
+                            <td>🔴 Röd</td>
+                            <td>&gt; 100%</td>
+                            <td>Överbelastad, för mycket planerat</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="avbrott">
+                <h2>8. Avbrottslogg</h2>
+                
+                <h3>Lägga till ett avbrott</h3>
+                <ol class="steps">
+                    <li>Scrolla till <strong>"Avbrottslogg"</strong> längst ner</li>
+                    <li>Hitta rätt datum i tidslinjen</li>
+                    <li>Klicka på <strong>"+ Lägg till"</strong></li>
+                    <li>Fyll i tid, avdelning, kontaktmetod och beskrivning</li>
+                    <li>Avbrottet sparas automatiskt</li>
+                </ol>
+
+                <div class="info-box">
+                    <strong>💡 Tips:</strong> Använd dina anpassade avdelningar och kontaktmetoder från inställningsmenyn för bättre kategorisering!
+                </div>
+
+                <h3>Avbrottstid i tidslinjen</h3>
+                <ul>
+                    <li>Avbrottstiden syns i huvudtidslinjen under "Avbrottstid (h)"</li>
+                    <li>Denna tid minskar tillgänglig projekttid</li>
+                    <li>Används i beläggningsrapporten för total belastning</li>
+                </ul>
+            </section>
+
+            <section id="kvalitet">
+                <h2>9. Kvalitetsförluster</h2>
+                
+                <p>Kvalitetsförlustloggen hjälper dig att spåra och analysera kvalitetsförluster i arbetet - tid som inte skapar värde men som måste utföras.</p>
+
+                <h3>Lägga till en kvalitetsförlust</h3>
+                <ol class="steps">
+                    <li>Scrolla till <strong>"Kvalitetsförluster"</strong> längst ner på sidan</li>
+                    <li>Hitta rätt datum i tidslinjen</li>
+                    <li>Klicka på <strong>"+ Lägg till"</strong></li>
+                    <li>Fyll i kvalitetsförlustinformation:
+                        <ul>
+                            <li><strong>Tid (h):</strong> Hur lång tid tog kvalitetsförlusten?</li>
+                            <li><strong>Avdelning:</strong> Välj vilken avdelning som är ansvarig/berörd</li>
+                            <li><strong>Typ av förlust:</strong> Omarbete, Sent tillägg, Buggrättning, etc.</li>
+                            <li><strong>Projekt:</strong> Vilket projekt kvalitetsförlusten är kopplad till</li>
+                            <li><strong>Beskrivning:</strong> Beskriv vad kvalitetsförlusten handlade om</li>
+                        </ul>
+                    </li>
+                    <li>Kvalitetsförlusten sparas automatiskt</li>
+                </ol>
+
+                <div class="info-box">
+                    <strong>💡 Tips:</strong> Genom att koppla kvalitetsförluster till specifika projekt kan du identifiera mönster och förbättringsområden!
+                </div>
+
+                <h3>Kvalitetsförlusttid i tidslinjen</h3>
+                <ul>
+                    <li>Kvalitetsförlusterna visas i sin egen tidslinje under huvudtidslinjen</li>
+                    <li>Används i kvalitetsförlustrapporten för att analysera mönster</li>
+                    <li>Kopplas till specifika projekt för detaljerad analys</li>
+                </ul>
+            </section>
+
+            <section id="rapporter">
+                <h2>10. Rapporter</h2>
+                
+                <h3>Beläggningsrapport</h3>
+                <p>Generera detaljerad analys av kapacitet och beläggning:</p>
+                <ol class="steps">
+                    <li>Ange rapportnamn (valfritt)</li>
+                    <li>Klicka på <strong>"Generera Beläggningsrapport"</strong></li>
+                    <li>Rapporten visar årssammanfattning, veckoöversikt och daglig kapacitet</li>
+                    <li>Exportera till Excel med <strong>"Exportera till Excel (CSV)"</strong></li>
+                </ol>
+
+                <h4>Rapporten innehåller:</h4>
+                <ul>
+                    <li>Årssammanfattning med total beläggning och kvalitetsförlust</li>
+                    <li>Beläggning per vecka med färgkodning</li>
+                    <li>Daglig kapacitet och fördelning</li>
+                    <li>Projektgenomförande och effektivitet</li>
+                    <li>Automatisk kategorisering av dina anpassade uppgiftstyper</li>
+                </ul>
+
+                <h3>Avbrottsrapport</h3>
+                <p>Analysera avbrott och hitta förbättringsmöjligheter:</p>
+                <ul>
+                    <li>Totalt antal avbrott och förlorad tid</li>
+                    <li>Avbrott per avdelning (inklusive dina anpassade)</li>
+                    <li>Avbrott per kontaktmetod</li>
+                    <li>Månadsöversikt och trender</li>
+                    <li>Top 10 dagar med flest avbrott</li>
+                    <li>Automatiska insikter och förbättringsförslag</li>
+                </ul>
+
+                <h3>Kvalitetsförlustrapport</h3>
+                <p>Generera detaljerad analys av kvalitetsförluster:</p>
+                <ol class="steps">
+                    <li>Klicka på <strong>"Generera Kvalitetsförlustrapport"</strong></li>
+                    <li>Rapporten öppnas med fullständig analys</li>
+                    <li>Exportera till CSV med <strong>"Exportera till CSV"</strong></li>
+                </ol>
+
+                <h4>Rapporten innehåller:</h4>
+                <ul>
+                    <li><strong>Årssammanfattning:</strong> Total kvalitetsförlust och fördelning mellan olika förlusttyper</li>
+                    <li><strong>Kvalitetsförluster per projekt:</strong> Detaljerad uppdelning per projekt med avdelningar och förlusttyper</li>
+                    <li><strong>Fördelning per avdelning:</strong> Vilka avdelningar som genererar mest kvalitetsförluster</li>
+                    <li><strong>Fördelning per förlusttyp:</strong> Vilka typer av kvalitetsförluster som är vanligast</li>
+                    <li><strong>Detaljerad lista:</strong> Alla registrerade kvalitetsförluster med datum, projekt, avdelning, typ och beskrivning</li>
+                </ul>
+
+                <div class="success-box">
+                    <strong>💡 Användningsexempel:</strong>
+                    <p>Kvalitetsförlustrapporten hjälper dig att:</p>
+                    <ul>
+                        <li>Identifiera vilka projekt som har mest kvalitetsförluster</li>
+                        <li>Se vilka avdelningar som orsakar flest problem</li>
+                        <li>Förstå vilka typer av förluster som är vanligast</li>
+                        <li>Fokusera förbättringsarbete på rätt områden</li>
+                        <li>Dokumentera och kommunicera kvalitetsproblem</li>
+                    </ul>
+                </div>
+
+                <h3>Språkstöd i rapporter</h3>
+                <div class="info-box">
+                    <strong>🌍 Flerspråkigt:</strong>
+                    <p>Alla rapporter genereras automatiskt på det valda språket (svenska eller engelska).</p>
+                    <ul>
+                        <li>Datumformat anpassas automatiskt (sv: "17 december 2025", en: "December 17, 2025")</li>
+                        <li>CSV-filer får språkspecifika filnamn och rubriker</li>
+                        <li>Alla texter i rapporter och exporter översätts automatiskt</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="avancerat">
+                <h2>11. Avancerade funktioner</h2>
+                
+                <h3>Batch-operationer</h3>
+                <p>Markera och hantera flera uppgifter samtidigt:</p>
+                
+                <h4>Markera flera uppgifter:</h4>
+                <ul>
+                    <li><strong>Ctrl+klick:</strong> Markera individuella uppgifter</li>
+                    <li><strong>Shift+klick:</strong> Markera intervall mellan två uppgifter</li>
+                    <li><strong>Ctrl+A:</strong> Markera alla uppgifter</li>
+                </ul>
+
+                <h3>Undo & Redo</h3>
+                <div class="success-box">
+                    <strong>🔄 Säker experimentering:</strong> Alla ändringar kan ångras!
+                    <ul>
+                        <li><strong>Ångra:</strong> Ctrl+Z</li>
+                        <li><strong>Gör om:</strong> Ctrl+Y eller Ctrl+Shift+Z</li>
+                        <li>Upp till 50 ändringar sparas i historiken</li>
+                    </ul>
+                </div>
+
+                <h3>Spara och ladda data</h3>
+                <h4>Spara till fil:</h4>
+                <ol class="steps">
+                    <li>Klicka på <strong>☰</strong> (filmenyn)</li>
+                    <li>Välj <strong>"Spara till fil (JSON)"</strong></li>
+                    <li>Filen laddas ner med format: <code>arbetsplan_YYYY-MM-DD.json</code></li>
+                </ol>
+
+                <h4>Ladda från fil:</h4>
+                <ol class="steps">
+                    <li>Klicka på <strong>☰</strong> (filmenyn)</li>
+                    <li>Klicka på <strong>"Välj fil"</strong></li>
+                    <li>Välj din sparade JSON-fil</li>
+                    <li>Data laddas in automatiskt</li>
+                </ol>
+
+                <div class="warning-box">
+                    <strong>⚠️ Automatisk sparning:</strong> All data sparas automatiskt i webbläsarens localStorage, men vi rekommenderar att spara till fil regelbundet som backup!
+                </div>
+            </section>
+
+            <section id="tips">
+                <h2>12. Tips och tricks</h2>
+                
+                <h3>Effektiv planering</h3>
+                <ol>
+                    <li><strong>Börja med årsoversikten</strong> - Identifiera viktiga perioder</li>
+                    <li><strong>Planera stora projekt först</strong> - Lägg in som "ankare"</li>
+                    <li><strong>Använd kommentarer</strong> - Dokumentera beroenden och särskilda omständigheter</li>
+                    <li><strong>Anpassa uppgiftstyper</strong> - Lägg till organisationsspecifika typer</li>
+                    <li><strong>Reservera tid för support</strong> - Baserat på historiska data</li>
+                    <li><strong>Håll 80-90% beläggning</strong> - Ger buffert för oväntade händelser</li>
+                </ol>
+
+                <h3>Tangentbordsgenvägar</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Genväg</th>
+                            <th>Funktion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>Ctrl+Z</code></td><td>Ångra</td></tr>
+                        <tr><td><code>Ctrl+Y</code></td><td>Gör om</td></tr>
+                        <tr><td><code>Ctrl+A</code></td><td>Markera alla uppgifter</td></tr>
+                        <tr><td><code>Ctrl+klick</code></td><td>Markera flera / Kopiera uppgift</td></tr>
+                        <tr><td><code>Shift+klick</code></td><td>Markera intervall</td></tr>
+                        <tr><td><code>Escape</code></td><td>Avbryt pågående operation</td></tr>
+                        <tr><td><code>Högerklick</code></td><td>Snabbmeny</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="felsok">
+                <h2>13. Felsökning</h2>
+                
+                <h3>Vanliga problem och lösningar</h3>
+                
+                <h4>Problem: Tidslinjen visas inte</h4>
+                <ol class="steps">
+                    <li>Öppna utvecklarverktyg (F12)</li>
+                    <li>Kolla Console-fliken för felmeddelanden</li>
+                    <li>Ladda om sidan med Ctrl+F5 (hård omladdning)</li>
+                </ol>
+
+                <h4>Problem: Data försvinner</h4>
+                <div class="warning-box">
+                    <strong>Möjliga orsaker:</strong>
+                    <ul>
+                        <li>Använder inkognitoläge (localStorage rensas)</li>
+                        <li>Rensning av webbläsarhistorik/cache</li>
+                        <li>Byte av webbläsare eller dator</li>
+                    </ul>
+                    <strong>Lösning:</strong> Använd ALLTID filsparning som backup och undvik inkognitoläge.
+                </div>
+
+                <h4>Problem: Kommentarer försvinner</h4>
+                <div class="success-box">
+                    <strong>✅ Åtgärdat i version 2.0:</strong> Kommentarer bevaras nu automatiskt vid all omberäkning av projekt!
+                </div>
+
+                <h3>Support och kontakt</h3>
+                <p>Om du hittar buggar eller problem:</p>
+                <ol>
+                    <li>Dokumentera problemet med skärmdumpar</li>
+                    <li>Kontrollera Console (F12) för felmeddelanden</li>
+                    <li>Kontakta utvecklaren med informationen</li>
+                </ol>
+            </section>
+
+            <div style="margin-top: 60px; padding: 40px; background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border-radius: 8px; text-align: center;">
+                <h2 style="color: var(--primary-color); margin-top: 0;">Lycka till med din planering! 🚀</h2>
+                <p style="font-size: 1.1em; color: var(--gray);">TimeWeaver - Effektiv kapacitetsplanering gjord enkel</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>TimeWeaver</strong> Version 2.0</p>
+            <p>Utvecklad för effektiv kapacitetsplanering och projekthantering</p>
+            <p>© 2025 Henrik Alexanderson</p>
+        </div>
+    </div>
+</body>
+</html>
