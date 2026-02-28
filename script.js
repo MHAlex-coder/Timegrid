@@ -322,12 +322,25 @@ function recalculateAllTasks() {
 
   const nonProjectTasks = tasks.filter(t => t.type !== 'project' && t.type !== 'dummy');
   
-  const allLimits = {};
-  tasks.forEach(t => {
+    const allLimits = {};
+    const limitsByDate = {};
+    tasks.forEach(t => {
       if (t.dayLimit !== undefined) {
-          allLimits[t.date] = t.dayLimit;
+        if (!limitsByDate[t.date]) limitsByDate[t.date] = [];
+        limitsByDate[t.date].push(t);
       }
-  });
+    });
+
+    Object.keys(limitsByDate).forEach(date => {
+      const entries = limitsByDate[date];
+      const nonDummyEntries = entries.filter(e => e.type !== 'dummy');
+
+      if (nonDummyEntries.length > 0) {
+        allLimits[date] = parseFloat(nonDummyEntries[nonDummyEntries.length - 1].dayLimit) || HOURS_PER_DAY_DEFAULT;
+      } else {
+        allLimits[date] = parseFloat(entries[entries.length - 1].dayLimit) || HOURS_PER_DAY_DEFAULT;
+      }
+    });
   
   // Spara ursprungliga timmar för varje locked block (innan justering)
   lockedProjectBlocks.forEach(lockedBlock => {
@@ -919,6 +932,18 @@ function recalculateAllTasks() {
 // F. UI-RENDERING (Tidslinje/Block)
 // ===============================================
 
+function getDayLimitForDate(dateStr) {
+  const dayEntries = tasks.filter(t => t.date === dateStr && t.dayLimit !== undefined);
+  if (dayEntries.length === 0) return HOURS_PER_DAY_DEFAULT;
+
+  const nonDummyEntries = dayEntries.filter(t => t.type !== 'dummy');
+  if (nonDummyEntries.length > 0) {
+    return parseFloat(nonDummyEntries[nonDummyEntries.length - 1].dayLimit) || HOURS_PER_DAY_DEFAULT;
+  }
+
+  return parseFloat(dayEntries[dayEntries.length - 1].dayLimit) || HOURS_PER_DAY_DEFAULT;
+}
+
 function generateTimeline() {
   timeline.innerHTML = '';
   
@@ -940,11 +965,7 @@ function generateTimeline() {
       dayDiv.classList.add('swap-source');
     }
     
-    let workHours = HOURS_PER_DAY_DEFAULT;
-    const dayTaskForLimit = tasks.find(t => t.date === dateStr);
-    if (dayTaskForLimit) {
-        workHours = dayTaskForLimit.dayLimit || HOURS_PER_DAY_DEFAULT; 
-    }
+    const workHours = getDayLimitForDate(dateStr);
     
     dayDiv.dataset.workhours = workHours;
     
