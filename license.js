@@ -8,6 +8,8 @@ const LICENSE_TYPES = {
   LIFETIME: 'lifetime'
 };
 
+const DEFAULT_TRIAL_DAYS = 10;
+
 const LICENSE_STORAGE_KEY = 'timegrid_license';
 const LEGACY_LICENSE_STORAGE_KEY = 'timeweaver_license';
 const FIRST_RUN_STORAGE_KEY = 'timegrid_first_run';
@@ -162,7 +164,7 @@ function getLicenseStatus() {
     if (!firstRun) {
       // Första körningen - starta 10-dagars trial
       const trialExpiry = new Date();
-      trialExpiry.setDate(trialExpiry.getDate() + 10);
+      trialExpiry.setDate(trialExpiry.getDate() + DEFAULT_TRIAL_DAYS);
       
       const trialData = {
         type: LICENSE_TYPES.TRIAL,
@@ -178,7 +180,7 @@ function getLicenseStatus() {
         valid: true,
         type: LICENSE_TYPES.TRIAL,
         expiry: trialExpiry,
-        daysLeft: 10,
+        daysLeft: DEFAULT_TRIAL_DAYS,
         isTrial: true
       };
     }
@@ -196,7 +198,20 @@ function getLicenseStatus() {
     
     // Annars validera lagrad trial-data
     if (licenseData.type === LICENSE_TYPES.TRIAL) {
-      const expiry = new Date(licenseData.expiry);
+      const activationDate = licenseData.activatedAt ? new Date(licenseData.activatedAt) : new Date();
+      const maxTrialExpiry = new Date(activationDate);
+      maxTrialExpiry.setDate(maxTrialExpiry.getDate() + DEFAULT_TRIAL_DAYS);
+
+      let expiry = new Date(licenseData.expiry);
+      if (isNaN(expiry.getTime()) || expiry > maxTrialExpiry) {
+        expiry = maxTrialExpiry;
+        licenseData.expiry = expiry.toISOString();
+        if (!licenseData.activatedAt) {
+          licenseData.activatedAt = activationDate.toISOString();
+        }
+        localStorage.setItem(LICENSE_STORAGE_KEY, JSON.stringify(licenseData));
+      }
+
       const now = new Date();
       
       if (now > expiry) {
