@@ -160,9 +160,9 @@ function getLicenseStatus() {
     const firstRun = localStorage.getItem(FIRST_RUN_STORAGE_KEY);
     
     if (!firstRun) {
-      // Första körningen - starta 30-dagars trial
+      // Första körningen - starta 10-dagars trial
       const trialExpiry = new Date();
-      trialExpiry.setDate(trialExpiry.getDate() + 30);
+      trialExpiry.setDate(trialExpiry.getDate() + 10);
       
       const trialData = {
         type: LICENSE_TYPES.TRIAL,
@@ -178,7 +178,7 @@ function getLicenseStatus() {
         valid: true,
         type: LICENSE_TYPES.TRIAL,
         expiry: trialExpiry,
-        daysLeft: 30,
+        daysLeft: 10,
         isTrial: true
       };
     }

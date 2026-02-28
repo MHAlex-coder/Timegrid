@@ -6,7 +6,7 @@ TimeGrid använder ett klient-baserat licensieringssystem med tre licenstyper:
 
 ### Licenstyper
 
-1. **Testversion (Trial)** - 30 dagar gratis
+1. **Testversion (Trial)** - 10 dagar gratis
    - Startar automatiskt vid första användningen
    - Full funktionalitet under testperioden
    
@@ -53,7 +53,7 @@ TimeGrid använder ett klient-baserat licensieringssystem med tre licenstyper:
 
 1. Öppna filen `license-generator.html` i en webbläsare
 2. Välj licenstyp:
-   - **Testversion** - 30 dagar (eller anpassat antal dagar)
+   - **Testversion** - 10 dagar (eller anpassat antal dagar)
    - **Årslicens** - 365 dagar (eller anpassat antal dagar)  
    - **Evighetslicens** - Utgår aldrig
 3. (Valfritt) Ange Kund-ID för spårning
