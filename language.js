@@ -58,7 +58,7 @@ const translations = {
         
         // Mått
         min: "Min",
-        max: "Max",
+        max: "Arb.tid",
         capacity: "Mötestid",
         projectTime: "Mötesfri",
         
@@ -425,7 +425,7 @@ const translations = {
         
         // Measures
         min: "Min",
-        max: "Max",
+        max: "Wk hrs",
         capacity: "Meeting time",
         projectTime: "Meeting-free",
         
