@@ -948,11 +948,9 @@ function generateTimeline() {
     
     dayDiv.dataset.workhours = workHours;
     
-    let meetingHours = 0;
-    const meetingTask = tasks.find(t => t.date === dateStr && t.type === 'meeting');
-    if (meetingTask) {
-        meetingHours = meetingTask.hours;
-    }
+    const meetingHours = tasks
+      .filter(t => t.date === dateStr && t.type === 'meeting')
+      .reduce((sum, t) => sum + (parseFloat(t.hours) || 0), 0);
     
     dayDiv.dataset.meetinghours = meetingHours;
     
@@ -984,8 +982,8 @@ function generateTimeline() {
         <span class="hours-info"></span>
         <div class="status-bar"><div class="status-fill"></div></div>
         <div style="margin-top:4px; font-size:0.9em; display:flex; justify-content:space-between;">
-            <span>${typeof t === 'function' ? t('max') : 'Max'}: <input type="number" style="width:35px" value="${workHours}" onchange='updateWorkHours("${dateStr}", this.value)'> h</span>
-            <span>${typeof t === 'function' ? t('capacity') : 'Mötestid'}: <input type="number" style="width:35px" value="${meetingHours}" onchange='updateMeetingHours("${dateStr}", this.value)'> h</span>
+            <span>${typeof t === 'function' ? t('max') : 'Max'}: <input type="number" class="work-hours-input" style="width:35px" value="${workHours}" onchange='updateWorkHours("${dateStr}", this.value)'> h</span>
+            <span>${typeof t === 'function' ? t('capacity') : 'Mötestid'}: <input type="number" class="meeting-hours-input" style="width:35px" value="${meetingHours}" onchange='updateMeetingHours("${dateStr}", this.value)'> h</span>
         </div>
         <div id="interruption-info-${dateStr}" style="margin-top:4px; font-size:0.85em; color:#e74c3c; font-weight:bold;"></div>
         <div id="quality-loss-info-${dateStr}" style="margin-top:4px; font-size:0.85em; color:#f57c00; font-weight:bold;"></div>
@@ -1287,6 +1285,7 @@ function renderTasks(){
     
     const totalUsed = dayTasks.filter(t => t.type !== 'dummy').reduce((s, t) => s + t.hours, 0);
     const nonProjectUsed = dayTasks.filter(t => t.type !== 'project' && t.type !== 'dummy').reduce((s,t)=>s+t.hours,0);
+    const totalMeetingHours = meetingsInDay.reduce((s, t) => s + (parseFloat(t.hours) || 0), 0);
     
     // Hämta avbrottstid för denna dag
     const interruptionHours = parseFloat(dayDiv.dataset.interruptionhours) || 0;
@@ -1327,6 +1326,18 @@ function renderTasks(){
     }
 
     const blocksContainer = dayDiv.querySelector('.blocks');
+
+    // Synka footer-inputs med faktisk data efter inläsning/omrendering
+    const workHoursInput = dayDiv.querySelector('.work-hours-input');
+    if (workHoursInput) {
+      workHoursInput.value = dayLimit;
+    }
+
+    const meetingHoursInput = dayDiv.querySelector('.meeting-hours-input');
+    if (meetingHoursInput) {
+      meetingHoursInput.value = totalMeetingHours;
+    }
+    dayDiv.dataset.meetinghours = totalMeetingHours;
     
     // === RENDERA I ORDNING: PROJEKT (simbanor) → ÖVRIGA UPPGIFTER → MÖTEN ===
     
@@ -1440,6 +1451,14 @@ function renderTasks(){
       const dayLimit = parseFloat(dayDiv.dataset.workhours) || HOURS_PER_DAY_DEFAULT;
       const interruptionHours = parseFloat(dayDiv.dataset.interruptionhours) || 0;
       const overtimeHours = Math.max(0, dayLimit - HOURS_PER_DAY_DEFAULT);
+      const workHoursInput = dayDiv.querySelector('.work-hours-input');
+      if (workHoursInput) {
+        workHoursInput.value = dayLimit;
+      }
+      const meetingHoursInput = dayDiv.querySelector('.meeting-hours-input');
+      if (meetingHoursInput) {
+        meetingHoursInput.value = '0';
+      }
       
       let infoText = `Totalt bokad: ${interruptionHours.toFixed(1)}h / ${dayLimit}h`;
       if (overtimeHours > 0) {
